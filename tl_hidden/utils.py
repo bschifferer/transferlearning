@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 import os
+import matplotlib.pyplot as plt
 
 def add_border(img, image_shape):
     border_v = 0
@@ -32,3 +33,22 @@ def list_all_images(PATH, SUB = ''):
     images_subfolders = [element for subfolder in images_subfolders for element in subfolder ]
     images = [SUB + '/' + element for element in elements if element.endswith('.png') or element.endswith('.jpg')]
     return(images + images_subfolders)
+
+def visualize_reco(reco, index_itemset, image_names, path):
+    N = len(reco)
+    K = reco[0].shape[0]
+    f, axarr = plt.subplots(N, K+1)
+    f.set_figheight(2*N)
+    f.set_figwidth(3*K)
+    for n in range(0, N):
+        if n == 0:
+            axarr[n, 0].set_title("Basis")
+        axarr[n, 0].imshow(open_image(path + image_names[index_itemset[n]], [299, 299, 3]))
+        axarr[n, 0].set_yticklabels([])
+        axarr[n, 0].set_xticklabels([])
+        for k in range(0, K):
+            if n == 0:
+                axarr[n, k+1].set_title("Reco" + str(k+1))
+            axarr[n, k+1].imshow(open_image(path + image_names[reco[n][k]], [299, 299, 3]))
+            axarr[n, k+1].set_yticklabels([])
+            axarr[n, k+1].set_xticklabels([])
